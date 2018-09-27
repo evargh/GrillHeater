@@ -45,7 +45,7 @@ while time.time() < stop:
       if (word & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
          t = 9.0*(word >> 3)/20.0 + 32.0
          yeet = "{:.2f}".format(t)
-         speed = int(t) * 2
+         speed = int(t) * 3 - 20
          myMotor.setSpeed(speed)
          print(yeet + ' '+ str(speed))
       else:
