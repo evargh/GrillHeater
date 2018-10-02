@@ -78,16 +78,17 @@ class MotorRunner(threading.Thread):
                          else:
                              motorState == False
                              myMotor.setSpeed(0)
-                 print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta))
+                 print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + motorState)
               else:
                  print("bad reading {:b}".format(word))
-           time.sleep(0.25) # Don't try to read more often than 4 times a second.
+           time.sleep(1) # Don't try to read more often than 4 times a second.
 
 x = MotorRunner(name='Motor')
 y = labelrun(name='Panel')
 x.start()
 y.start()
 
-pi.spi_close(sensor)
+pi.spi_close(sensorMeat)
+pi.spi_close(sensorBot)
 
 pi.stop()
