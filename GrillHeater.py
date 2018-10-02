@@ -80,7 +80,7 @@ class MotorRunner(threading.Thread):
                          else:
                              motorState == False
                              myMotor.setSpeed(0)
-                 print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + motorState)
+                 print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
               else:
                  print("bad reading {:b}".format(word))
            time.sleep(1) # Don't try to read more often than 4 times a second.
