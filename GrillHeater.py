@@ -42,7 +42,7 @@ timeStat = time.time()
 target = 100.0
 motorState = False
 
-while time.time() < stop:
+while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
    c, d = pi.spi_read(sensorMeat, 2)
    e, f = pi.spi_read(sensorBot, 2)
@@ -52,25 +52,24 @@ while time.time() < stop:
       if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
          t = 9*(wordMeat >> 3)/20.0 + 32.0
          u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = t - targetTemp
-         if(abs(time.time() - timeStat - 10) < 1)
-         timeStat = time.time()
+         delta = t - target
+         if(abs(time.time() - timeStat - 10) < 1):
+             timeStat = time.time()
              if delta < -20:
-                 if motorState = False:
+                 if motorState == False:
                      motorState = True
                      myMotor.setSpeed(100)
                  else:
-                     motorState = False
+                     motorState == False
                      myMotor.setSpeed(0)
              elif delta < 0:
-                 if motorState = False:
+                 if motorState == False:
                      motorState = True
                      myMotor.setSpeed(60)
                  else:
-                     motorState = False
+                     motorState == False
                      myMotor.setSpeed(0)
-         myMotor.setSpeed(speed)
-         print("{:.2f}".format(t) + ' ' + + "{:.2f}".format(u) + ' ' + delta)
+         print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta))
       else:
          print("bad reading {:b}".format(word))
    time.sleep(0.25) # Don't try to read more often than 4 times a second.
