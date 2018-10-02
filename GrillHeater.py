@@ -17,18 +17,7 @@ class labelrun(threading.Thread):
         labbel.pack()
         root.mainloop()
 
-spi = spidev.SpiDev()
-spi.open(0, 0)
 
-spi.max_speed_hz = 500000
-spi.mode = 0
-
-mh = Adafruit_MotorHAT(addr=0x60)
-def turnOffMotors():
-    mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
-
-atexit.register(turnOffMotors)
-myMotor = mh.getMotor(1)
 
 """
 # set the speed to start, from 0 (off) to 255 (max speed)
@@ -38,16 +27,29 @@ myMotor.run(Adafruit_MotorHAT.FORWARD);
 myMotor.run(Adafruit_MotorHAT.RELEASE);
 """
 
-pi = pigpio.pi()
-
-if not pi.connected:
-   exit(0)
-
-sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
-sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 
 class MotorRunner(threading.Thread):
     def run(self):
+        spi = spidev.SpiDev()
+        spi.open(0, 0)
+
+        spi.max_speed_hz = 500000
+        spi.mode = 0
+
+        mh = Adafruit_MotorHAT(addr=0x60)
+        def turnOffMotors():
+            mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
+
+        atexit.register(turnOffMotors)
+        myMotor = mh.getMotor(1)
+
+        pi = pigpio.pi()
+
+        if not pi.connected:
+           exit(0)
+
+        sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
+        sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
         timeStat = time.time()
         target = 100.0
         motorState = False
