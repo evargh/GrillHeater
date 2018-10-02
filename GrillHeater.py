@@ -11,11 +11,10 @@ import threading
 from subprocess import Popen, PIPE
 
 class labelrun(threading.Thread):
-    def run(self):
-        root = Tk()
-        labbel = Label(root, text="This is a test")
-        labbel.pack()
-        root.mainloop()
+    root = Tk()
+    labbel = Label(root, text="This is a test")
+    labbel.pack()
+    root.mainloop()
 
 
 
@@ -67,6 +66,7 @@ class MotorRunner(threading.Thread):
                  if(abs(time.time() - timeStat - 10) < 1):
                      timeStat = time.time()
                      if delta < -20:
+                         print('Delta is smaller than -20')
                          if motorState == False:
                              motorState = True
                              myMotor.setSpeed(100)
@@ -74,6 +74,7 @@ class MotorRunner(threading.Thread):
                              motorState == False
                              myMotor.setSpeed(0)
                      elif delta < 0:
+                         print('Delta is smaller than 0 but not -20')
                          if motorState == False:
                              motorState = True
                              myMotor.setSpeed(60)
