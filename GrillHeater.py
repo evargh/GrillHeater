@@ -9,13 +9,19 @@ import spidev
 import atexit
 import threading
 from subprocess import Popen, PIPE
+import logging
 
-class labelrun(threading.Thread):
+
+def labelrun():
     root = Tk()
     labbel = Label(root, text="This is a test")
     labbel.pack()
     root.mainloop()
 
+panel = threading.Thread(name='panel',target=labelrun)
+panel.setDaemon(true)
+
+panel.start()
 
 
 """
