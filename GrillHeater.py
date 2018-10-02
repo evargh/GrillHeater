@@ -42,6 +42,18 @@ timeStat = time.time()
 target = 100.0
 motorState = False
 
+app = Flask(__name__)
+
+@app.route('/index.html', methods=['GET', 'POST'])
+def index():
+    # return the html page i already made
+    # form = FileForm()
+    return render_template('index.html')
+
+if __name__ == "__main__":
+    # hosts the site locally
+    app.run('0.0.0.0', port=5000)
+
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
    c, d = pi.spi_read(sensorMeat, 2)
@@ -73,17 +85,6 @@ while True:
       else:
          print("bad reading {:b}".format(word))
    time.sleep(0.25) # Don't try to read more often than 4 times a second.
-
-
-@app.route('/index.html', methods=['GET', 'POST'])
-def index():
-    # return the html page i already made
-    # form = FileForm()
-    return render_template('index.html')
-
-if __name__ == "__main__":
-    # hosts the site locally
-    app.run('0.0.0.0', port=5000)
 
 pi.spi_close(sensor)
 
