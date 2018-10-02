@@ -19,7 +19,7 @@ def labelrun():
     root.mainloop()
 
 panel = threading.Thread(name='panel',target=labelrun)
-panel.setDaemon(true)
+panel.setDaemon(True)
 
 panel.start()
 
@@ -93,9 +93,7 @@ class MotorRunner(threading.Thread):
            time.sleep(1) # Don't try to read more often than 4 times a second.
 
 x = MotorRunner(name='Motor')
-y = labelrun(name='Panel')
 x.start()
-y.start()
 
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
