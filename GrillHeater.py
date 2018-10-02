@@ -46,8 +46,6 @@ timeStat = time.time()
 target = 100.0
 motorState = False
 
-app = Flask(__name__)
-
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
    c, d = pi.spi_read(sensorMeat, 2)
