@@ -81,6 +81,10 @@ def index():
     # form = FileForm()
     return render_template('index.html')
 
+if __name__ == "__main__":
+    # hosts the site locally
+    app.run('0.0.0.0', port=5000)
+
 pi.spi_close(sensor)
 
 pi.stop()
