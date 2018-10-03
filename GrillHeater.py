@@ -11,13 +11,17 @@ import threading
 from subprocess import Popen, PIPE
 import logging
 
+target = 100
+
 root = Tk()
 temp = StringVar()
 temp.set('0')
 labbel = Label(root, textvariable=temp)
 labbel.pack()
 e = Entry(root)
+
 e.pack()
+submit = Button(root, text="Enter", width=15, command=lambda: target=e.get())
 e.insert(0,"100")
 time.sleep(10)
 
@@ -41,7 +45,6 @@ if not pi.connected:
 sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 timeStat = time.time()
-target = float(int(e.get()))
 motorState = False
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
