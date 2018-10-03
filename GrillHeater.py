@@ -12,14 +12,13 @@ from subprocess import Popen, PIPE
 import logging
 
 temp = StringVar()
-temp.set('0')
 def labelrun():
     root = Tk()
     labbel = Label(root, textvariable=temp)
     labbel.pack()
     root.mainloop()
 
-panel = threading.Thread(name='panel',target=labelrun(temp=0))
+panel = threading.Thread(name='panel',target=labelrun())
 panel.setDaemon(True)
 
 panel.start()
