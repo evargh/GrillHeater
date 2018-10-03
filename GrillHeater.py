@@ -15,7 +15,7 @@ temp = StringVar()
 temp.set('0')
 def labelrun():
     root = Tk()
-    labbel = Label(root, text=temp)
+    labbel = Label(root, textvariable=temp)
     labbel.pack()
     root.mainloop()
 
