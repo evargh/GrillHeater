@@ -10,6 +10,7 @@ import atexit
 import threading
 from subprocess import Popen, PIPE
 import logging
+Tk()
 
 temp = StringVar()
 temp.set('0')
