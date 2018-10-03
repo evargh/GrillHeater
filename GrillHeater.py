@@ -14,11 +14,11 @@ import logging
 
 def labelrun(temp):
     root = Tk()
-    labbel = Label(root, text=temp)
+    labbel = Label(root, text=str(temp))
     labbel.pack()
     root.mainloop()
 
-panel = threading.Thread(name='panel',target=labelrun)
+panel = threading.Thread(name='panel',target=labelrun(temp=0))
 panel.setDaemon(True)
 
 panel.start()
@@ -31,7 +31,7 @@ myMotor.run(Adafruit_MotorHAT.FORWARD);
 # turn on motor
 myMotor.run(Adafruit_MotorHAT.RELEASE);
 """
-
+pi = pigpio.pi()
 
 class MotorRunner(threading.Thread):
     def run(self):
@@ -47,8 +47,6 @@ class MotorRunner(threading.Thread):
 
         atexit.register(turnOffMotors)
         myMotor = mh.getMotor(1)
-
-        pi = pigpio.pi()
 
         if not pi.connected:
            exit(0)
@@ -87,7 +85,7 @@ class MotorRunner(threading.Thread):
                          else:
                              motorState = False
                              myMotor.setSpeed(0)
-                 labelrun(text = "{:.2f}".format(t) + ' ' + "{:.2f}".format(u))
+                 labelrun(temp=t)
                  print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
               else:
                  print("bad reading {:b}".format(word))
