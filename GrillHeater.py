@@ -10,11 +10,10 @@ import atexit
 import threading
 from subprocess import Popen, PIPE
 import logging
-Tk()
 
+root = Tk()
 temp = StringVar()
 temp.set('0')
-root = Tk()
 labbel = Label(root, textvariable=temp)
 labbel.pack()
 
@@ -77,7 +76,7 @@ while True:
                  else:
                      motorState = False
                      myMotor.setSpeed(0)
-         temp.set("{:.2f}".format(t) + ' ' + "{:.2f}".format(u))
+         temp.set("{:.2f}".format(t))
          root.update_idletasks()
          root.update()
          print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
