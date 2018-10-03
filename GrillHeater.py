@@ -24,7 +24,7 @@ labbel.pack()
 ent = Entry(root)
 
 ent.pack()
-submit = Button(root, text="Enter", width=15, command=setTemp(ent.get()))
+submit = Button(root, text="Enter", width=15, command=lamba: setTemp(ent.get()))
 submit.pack()
 ent.insert(0,"100")
 time.sleep(10)
