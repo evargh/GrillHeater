@@ -11,6 +11,9 @@ import threading
 from subprocess import Popen, PIPE
 import logging
 
+def setTemp(temp):
+    target = temp
+
 target = '100'
 
 root = Tk()
