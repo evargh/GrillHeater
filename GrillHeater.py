@@ -77,7 +77,7 @@ class MotorRunner(threading.Thread):
                              motorState = True
                              myMotor.setSpeed(100)
                          else:
-                             motorState == False
+                             motorState = False
                              myMotor.setSpeed(0)
                      elif delta < 0:
                          print('Delta is smaller than 0 but not -20')
@@ -85,7 +85,7 @@ class MotorRunner(threading.Thread):
                              motorState = True
                              myMotor.setSpeed(60)
                          else:
-                             motorState == False
+                             motorState = False
                              myMotor.setSpeed(0)
                  print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
               else:
