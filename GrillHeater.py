@@ -40,7 +40,7 @@ if not pi.connected:
 sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 timeStat = time.time()
-target = float(e.get())
+target = float(int(e.get()))
 motorState = False
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
