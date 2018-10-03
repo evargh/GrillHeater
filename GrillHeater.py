@@ -17,7 +17,6 @@ temp.set('0')
 root = Tk()
 labbel = Label(root, textvariable=temp)
 labbel.pack()
-panel = threading.Thread(name='panel',target=labelrun())
 
 
 """
