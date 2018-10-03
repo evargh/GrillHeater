@@ -18,7 +18,7 @@ labbel = Label(root, textvariable=temp)
 labbel.pack()
 e = Entry(root)
 e.pack()
-wait(10)
+time.sleep()
 
 pi = pigpio.pi()
 
