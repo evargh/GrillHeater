@@ -11,10 +11,11 @@ import threading
 from subprocess import Popen, PIPE
 import logging
 
-
-def labelrun(temp):
+temp = StringVar()
+temp.set('0')
+def labelrun():
     root = Tk()
-    labbel = Label(root, text=str(temp))
+    labbel = Label(root, text=temp)
     labbel.pack()
     root.mainloop()
 
@@ -85,7 +86,8 @@ class MotorRunner(threading.Thread):
                          else:
                              motorState = False
                              myMotor.setSpeed(0)
-                 labelrun(temp=t)
+                 temp.set("{:.2f}".format(t) + ' ' + "{:.2f}".format(u))
+                 root.update_idletasks()
                  print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
               else:
                  print("bad reading {:b}".format(word))
