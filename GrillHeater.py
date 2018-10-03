@@ -11,12 +11,10 @@ import threading
 from subprocess import Popen, PIPE
 import logging
 
-def setTemp(temp):
-    target = temp
-
-target = '100'
 
 root = Tk()
+target = IntVar()
+target.set(100)
 temp = StringVar()
 temp.set('0')
 labbel = Label(root, textvariable=temp)
@@ -46,8 +44,8 @@ myMotor = mh.getMotor(1)
 if not pi.connected:
    exit(0)
 
-def setTemp(temp):
-    target = temp
+def setTemp(nice):
+    target.set(int(nice))
 
 sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
@@ -63,7 +61,7 @@ while True:
       if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
          t = 9*(wordMeat >> 3)/20.0 + 32.0
          u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = t - float(int(target))
+         delta = t - target.get()
          if(abs(time.time() - timeStat - 10) < 1):
              timeStat = time.time()
              if delta < -20:
