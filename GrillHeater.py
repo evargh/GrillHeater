@@ -12,9 +12,9 @@ from subprocess import Popen, PIPE
 import logging
 
 
-def labelrun():
+def labelrun(temp):
     root = Tk()
-    labbel = Label(root, text="This is a test")
+    labbel = Label(root, text=temp)
     labbel.pack()
     root.mainloop()
 
@@ -87,6 +87,7 @@ class MotorRunner(threading.Thread):
                          else:
                              motorState = False
                              myMotor.setSpeed(0)
+                 labelrun(text = "{:.2f}".format(t) + ' ' + "{:.2f}".format(u))
                  print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
               else:
                  print("bad reading {:b}".format(word))
