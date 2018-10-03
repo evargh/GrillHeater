@@ -16,15 +16,10 @@ temp = StringVar()
 temp.set('0')
 labbel = Label(root, textvariable=temp)
 labbel.pack()
+e = Entry(root)
+e.pack()
+wait(10)
 
-
-"""
-# set the speed to start, from 0 (off) to 255 (max speed)
-myMotor.setSpeed(150)
-myMotor.run(Adafruit_MotorHAT.FORWARD);
-# turn on motor
-myMotor.run(Adafruit_MotorHAT.RELEASE);
-"""
 pi = pigpio.pi()
 
 spi = spidev.SpiDev()
@@ -45,7 +40,7 @@ if not pi.connected:
 sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 timeStat = time.time()
-target = 100.0
+target = float(e.get())
 motorState = False
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
