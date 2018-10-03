@@ -35,7 +35,7 @@ spi.max_speed_hz = 500000
 spi.mode = 0
 mh = Adafruit_MotorHAT(addr=0x60)
 def turnOffMotors():
-mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
+    mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
 
 atexit.register(turnOffMotors)
 myMotor = mh.getMotor(1)
