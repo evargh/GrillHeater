@@ -22,6 +22,7 @@ e = Entry(root)
 
 e.pack()
 submit = Button(root, text="Enter", width=15, command=lambda: setTemp(e.get()))
+submit.pack()
 e.insert(0,"100")
 time.sleep(10)
 
