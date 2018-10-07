@@ -106,7 +106,17 @@ while True:
       if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
          t = 9*(wordMeat >> 3)/20.0 + 32.0
          u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = t - target.get()
+         delta = target.get() - target
+         if delta > 100:
+             runt.set(120)
+         elif delta > 50:
+             runt.set(60)
+         elif delta > 6:
+             runt.set(30)
+         elif delta > 3:
+             runt.set(15)
+         elif delta < 0:
+             runt.set(10)
          delts.set('Delta: ' + "{:.2f}".format(delta))
          if not motorState and time.time() > timeStat + endt.get():
              timeStat = time.time()
