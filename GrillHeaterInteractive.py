@@ -32,28 +32,27 @@ delts.set('Delta: 0')
 labbelDelt = Label(root, textvariable=delts)
 labbelDelt.pack()
 
-
 tempEnt = Entry(root)
 tempEnt.pack()
-submit1 = Button(root, text="Enter Target", width=15, command=lambda: setTemp(tempEnt.get()))
+submit1 = Button(root, text="Target Temperature", width=15, command=lambda: setTemp(tempEnt.get()))
 submit1.pack()
 tempEnt.insert(0,"100")
 
 speedEnt = Entry(root)
 speedEnt.pack()
-submit2 = Button(root, text="Enter Speed", width=15, command=lambda: setSpeed(speedEnt.get()))
+submit2 = Button(root, text="Motor Speed", width=15, command=lambda: setSpeed(speedEnt.get()))
 submit2.pack()
 speedEnt.insert(0,"100")
 
 runtEnt = Entry(root)
 runtEnt.pack()
-submit3 = Button(root, text="Run Time", width=15, command=lambda: setRun(runtEnt.get()))
+submit3 = Button(root, text="Fan Run Time", width=15, command=lambda: setRun(runtEnt.get()))
 submit3.pack()
 runtEnt.insert(0,"10")
 
 endtEnt = Entry(root)
 endtEnt.pack()
-submit3 = Button(root, text="End Time", width=15, command=lambda: setEnd(endtEnt.get()))
+submit3 = Button(root, text="Wait Time", width=15, command=lambda: setEnd(endtEnt.get()))
 submit3.pack()
 endtEnt.insert(0,"10")
 
@@ -96,6 +95,7 @@ sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 timeStat = time.time()
 motorState = False
+
 while True:
    myMotor.run(Adafruit_MotorHAT.FORWARD)
    c, d = pi.spi_read(sensorMeat, 2)
@@ -108,23 +108,23 @@ while True:
          u = 9*(wordBot >> 3)/20.0 + 32.0
          delta = t - target.get()
          delts.set('Delta: ' + "{:.2f}".format(delta))
-         if(motorState == False and time.time() > timeStat + endt.get()):
+         if not motorState and time.time() > timeStat + endt.get():
              timeStat = time.time()
              motorState = True
              myMotor.setSpeed(motSpeed.get())
              valveControl.ChangeDutyCycle(15)
-         if(motorState == True and time.time() > timeStat + runt.get()):
+         if motorState and time.time() > timeStat + runt.get():
              timeStat = time.time()
              motorState = False
              myMotor.setSpeed(0)
              valveControl.ChangeDutyCycle(5)
-         temp.set('Temp: ' + "{:.2f}".format(t))
+         temp.set('Meat Temperature: ' + "{:.2f}".format(t) + '    Smoker Temperature ' + "{:.2f}".format(u))
          root.update_idletasks()
          root.update()
          print("{:.2f}".format(motSpeed.get()) + ' ' + "{:.2f}".format(target.get()) +
                ' ' + "{:.2f}".format(runt.get()) + ' ' + "{:.2f}".format(endt.get()))
       else:
-         print("bad reading {:b}".format(word))
+         print("bad reading {:b}".format(wordMeat) + ' ' + "bad reading {:b}".format(wordBot))
    time.sleep(1) # Don't try to read more often than 4 times a second.
 
 pi.spi_close(sensorMeat)
