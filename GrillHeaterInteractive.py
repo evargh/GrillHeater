@@ -23,13 +23,13 @@ while rows < 50:
     rows+=1
 
 target = IntVar()
-target.set(100)
+target.set(230)
 motSpeed = IntVar()
-motSpeed.set(100)
+motSpeed.set(120)
 runt = IntVar()
 runt.set(10)
 endt = IntVar()
-endt.set(10)
+endt.set(60)
 
 temp = StringVar()
 temp.set('Temp: 0')
@@ -50,7 +50,6 @@ labbelTitle = Label(root, text="Raspi Smoke & Grill", font=("Helvetica",30))
 labbelTitle.grid(row=40,column=30)
 
 pi = pigpio.pi()
-
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.OUT)
@@ -99,17 +98,25 @@ while True:
       if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
          t = 9*(wordMeat >> 3)/20.0 + 32.0
          u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = target.get() - target
-         if delta > 100:
-             runt.set(120)
-         elif delta > 50:
-             runt.set(60)
+         delta = target.get() - u
+         if delta > 50:
+             setRun(30)
+             setEnd(30)
+         elif delta > 25:
+             setRun(25)
+             setEnd(60)
          elif delta > 6:
-             runt.set(30)
+             setRun(15)
+             setEnd(60)
          elif delta > 3:
-             runt.set(15)
+             setRun(10)
+             setEnd(60)
+         elif delta < -5:
+             setRun(3)
+             setEnd(120)
          elif delta < 0:
-             runt.set(10)
+             setRun(3)
+             setEnd(60)
          delts.set('Delta: ' + "{:.2f}".format(delta))
          if not motorState and time.time() > timeStat + endt.get():
              timeStat = time.time()
