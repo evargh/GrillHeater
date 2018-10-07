@@ -33,21 +33,21 @@ endt.set(60)
 
 temp = StringVar()
 temp.set('Temp: 0')
-labbelTemp = Label(root, textvariable=temp, font=("Helvetica",18))
-labbelTemp.grid(row=10,column=10)
+labbelTemp = Label(root, textvariable=temp, font=("Helvetica",14))
+labbelTemp.grid(row=10,column=5)
 delts = StringVar()
-delts.set('Delta: 0')
-labbelDelt = Label(root, textvariable=delts, font=("Helvetica",18))
-labbelDelt.grid(row=10,column=30)
+delts.set('Delta Temp: 0')
+labbelDelt = Label(root, textvariable=delts, font=("Helvetica",14))
+labbelDelt.grid(row=15,column=5)
 
 tempEnt = Entry(root)
-tempEnt.grid(row=30,column=10)
-submit1 = Button(root, text="Target Temperature", width=15, command=lambda: setTemp(tempEnt.get()))
-submit1.grid(row=30,column=30)
-tempEnt.insert(0,"100")
+tempEnt.grid(row=10,column=30)
+submit1 = Button(root, text="Smoker Set Temp", width=15, command=lambda: setTemp(tempEnt.get()))
+submit1.grid(row=15,column=30)
+tempEnt.insert(0,"230")
 
-labbelTitle = Label(root, text="Raspi Smoke & Grill", font=("Helvetica",30))
-labbelTitle.grid(row=40,column=30)
+labbelTitle = Label(root, text="Smoke&Temp Master", font=("Helvetica",20))
+labbelTitle.grid(row=40,column=5)
 
 pi = pigpio.pi()
 
@@ -117,7 +117,7 @@ while True:
          elif delta < 0:
              setRun(3)
              setEnd(60)
-         delts.set('Delta: ' + "{:.2f}".format(delta))
+         delts.set('Delta Temp: ' + "{:.2f}".format(delta))
          if not motorState and time.time() > timeStat + endt.get():
              timeStat = time.time()
              motorState = True
@@ -128,7 +128,7 @@ while True:
              motorState = False
              myMotor.setSpeed(0)
              valveControl.ChangeDutyCycle(5)
-         temp.set('Meat Temperature: ' + "{:.2f}".format(t) + '\nSmoker Temperature ' + "{:.2f}".format(u))
+         temp.set('Meat Temperature: ' + "{:.2f}".format(t) + '\nSmoker Temperature: ' + "{:.2f}".format(u))
          root.update_idletasks()
          root.update()
          print("{:.2f}".format(motSpeed.get()) + ' ' + "{:.2f}".format(target.get()) +
