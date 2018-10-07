@@ -14,6 +14,14 @@ import logging
 
 
 root = Tk()
+root.geometry('500x500')
+
+rows = 0
+while rows < 50:
+    main.rowconfigure(rows, weight=1)
+    main.columnconfigure(rows,weight=1)
+    rows+=1
+
 target = IntVar()
 target.set(100)
 motSpeed = IntVar()
@@ -25,36 +33,21 @@ endt.set(10)
 
 temp = StringVar()
 temp.set('Temp: 0')
-labbelTemp = Label(root, textvariable=temp)
-labbelTemp.pack()
+labbelTemp = Label(root, textvariable=temp, font=("Helvetica",18))
+labbelTemp.grid(row=10,column=10)
 delts = StringVar()
 delts.set('Delta: 0')
-labbelDelt = Label(root, textvariable=delts)
-labbelDelt.pack()
+labbelDelt = Label(root, textvariable=delts, font=("Helvetica",18))
+labbelDelt.grid(row=10,column=30)
 
 tempEnt = Entry(root)
-tempEnt.pack()
+tempEnt.grid(row=30,column=10)
 submit1 = Button(root, text="Target Temperature", width=15, command=lambda: setTemp(tempEnt.get()))
-submit1.pack()
+submit1.grid(row=30,column=30)
 tempEnt.insert(0,"100")
 
-speedEnt = Entry(root)
-speedEnt.pack()
-submit2 = Button(root, text="Motor Speed", width=15, command=lambda: setSpeed(speedEnt.get()))
-submit2.pack()
-speedEnt.insert(0,"100")
-
-runtEnt = Entry(root)
-runtEnt.pack()
-submit3 = Button(root, text="Fan Run Time", width=15, command=lambda: setRun(runtEnt.get()))
-submit3.pack()
-runtEnt.insert(0,"10")
-
-endtEnt = Entry(root)
-endtEnt.pack()
-submit3 = Button(root, text="Wait Time", width=15, command=lambda: setEnd(endtEnt.get()))
-submit3.pack()
-endtEnt.insert(0,"10")
+labbelTitle = Label(root, text="Raspi Smoke & Grill", font=("Helvetica",30))
+labbelTitle.grid(row=40,column=30)
 
 pi = pigpio.pi()
 
@@ -128,7 +121,7 @@ while True:
              motorState = False
              myMotor.setSpeed(0)
              valveControl.ChangeDutyCycle(5)
-         temp.set('Meat Temperature: ' + "{:.2f}".format(t) + '    Smoker Temperature ' + "{:.2f}".format(u))
+         temp.set('Meat Temperature: ' + "{:.2f}".format(t) + '\nSmoker Temperature ' + "{:.2f}".format(u))
          root.update_idletasks()
          root.update()
          print("{:.2f}".format(motSpeed.get()) + ' ' + "{:.2f}".format(target.get()) +
