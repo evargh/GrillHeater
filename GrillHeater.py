@@ -2,6 +2,7 @@
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 from Tkinter import *
+import RPi.GPIO as GPIO
 
 import time
 import pigpio
@@ -16,18 +17,27 @@ root = Tk()
 target = IntVar()
 target.set(100)
 temp = StringVar()
-temp.set('0')
+motSpeed = StringVar()
+temp.set('Temperature: 0 degrees F')
+motSpeed.set('Motor Speed: 0')
 labbel = Label(root, textvariable=temp)
 labbel.pack()
+labbel2 = Label(root, textvariable=motSpeed)
+labbel2.pack()
 ent = Entry(root)
 
 ent.pack()
 submit = Button(root, text="Enter", width=15, command=lambda: setTemp(ent.get()))
 submit.pack()
 ent.insert(0,"100")
-time.sleep(10)
 
 pi = pigpio.pi()
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(24, GPIO.OUT)
+valveControl = GPIO.PWM(24, 100)
+valveControl.start(5)
 
 spi = spidev.SpiDev()
 spi.open(0, 0)
@@ -68,27 +78,36 @@ while True:
                  print('Delta is smaller than -20')
                  if motorState == False:
                      motorState = True
+                     motSpeed.set('Motor Speed: 100')
                      myMotor.setSpeed(100)
+                     valveControl.ChangeDutyCycle(15)
                  else:
                      motorState = False
+                     motSpeed.set('Motor Speed: 0')
                      myMotor.setSpeed(0)
+                     valveControl.ChangeDutyCycle(5)
              elif delta < 0:
                  print('Delta is smaller than 0 but not -20')
                  if motorState == False:
                      motorState = True
+                     motSpeed.set('Motor Speed: 60')
                      myMotor.setSpeed(60)
+                     valveControl.ChangeDutyCycle(15)
                  else:
                      motorState = False
+                     motSpeed.set('Motor Speed: 0')
                      myMotor.setSpeed(0)
-         temp.set("{:.2f}".format(t))
+                     valveControl.ChangeDutyCycle(5)
+         temp.set('Temperature: ' + "{:.2f}".format(t) + ' degrees F')
          root.update_idletasks()
          root.update()
-         print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
+         print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState) + ' ' + "{:.2f}".format(GPIO.input(24)))
       else:
          print("bad reading {:b}".format(word))
    time.sleep(1) # Don't try to read more often than 4 times a second.
 
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
+GPIO.cleanup()
 
 pi.stop()
