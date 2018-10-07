@@ -18,8 +18,8 @@ root.geometry('500x500')
 
 rows = 0
 while rows < 50:
-    main.rowconfigure(rows, weight=1)
-    main.columnconfigure(rows,weight=1)
+    root.rowconfigure(rows, weight=1)
+    root.columnconfigure(rows,weight=1)
     rows+=1
 
 target = IntVar()
