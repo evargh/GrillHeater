@@ -12,7 +12,6 @@ import threading
 from subprocess import Popen, PIPE
 import logging
 
-
 root = Tk()
 target = IntVar()
 target.set(100)
@@ -20,14 +19,14 @@ temp = StringVar()
 motSpeed = StringVar()
 temp.set('Temperature: 0 degrees F')
 motSpeed.set('Motor Speed: 0')
-labbel = Label(root, textvariable=temp)
+labbel = Label(root, textvariable = temp)
 labbel.pack()
-labbel2 = Label(root, textvariable=motSpeed)
+labbel2 = Label(root, textvariable = motSpeed)
 labbel2.pack()
-ent = Entry(root)
 
+ent = Entry(root)
 ent.pack()
-submit = Button(root, text="Enter", width=15, command=lambda: setTemp(ent.get()))
+submit = Button(root, text="Enter", width = 15, command = lambda: setTemp(ent.get()))
 submit.pack()
 ent.insert(0,"100")
 
