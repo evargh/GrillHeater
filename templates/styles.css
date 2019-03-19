@@ -1,0 +1,63 @@
+.jumbotron{ /* orignal gray stuff #F5F5F5 */
+    background-color:#FFD3AE; /* #FF6D00 = the orange in the logo, #5B4129 = the outside brown, #FFD3AE = rim color, #3A2819 = inside color */
+    color:black;
+}
+/* Adds borders for tabs */
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.nav-tabs {
+    margin-bottom: 0;
+}
+p.bold{
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+p.desc{
+  font-size: 1.25rem;
+  font-weight: 320;
+}
+.pad{
+  padding: 2rem;
+  padding-top: .5rem;
+}
+.bpad{
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+.textcoltop{
+  color: black;
+}
+.textcolbot{
+  color:black;
+}
+body{
+  background-color:  #ffffff;
+}
+.btn.btn-brown {
+    color: #ffffff;
+    background-color: #3a2819;
+    background-image: linear-gradient(to bottom, #5b4129, #3a2819);
+    border-color: #000000 #000000 #000000;
+}
+.btn.btn-brown:hover {
+    color: #ffffff;
+    background-color: #3a2819;
+    background-image: linear-gradient(to bottom, #3a2819, #3a2819);
+    border-color: #000000 #000000 #000000;
+}
+.btn.btn-darkbrown {
+    color: #ffffff;
+    background-color: #5b4129;
+    background-image: linear-gradient(to bottom, #5b4129, #5b4129);
+    border-color: #000000 #000000 #000000;
+}
+.btn.btn-darkbrown:hover {
+    color: #ffffff;
+    background-color: #3a2819;
+    background-image: linear-gradient(to bottom, #281c11, #281c11);
+    border-color: #000000 #000000 #000000;
+}
