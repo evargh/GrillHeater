@@ -17,6 +17,7 @@
     <div class="jumbotron">
       <div class="textcoltop">
         <h1 class="display-4">Smoke Temp</h1>
+        <input id="tempSlider" type="text"/>
       </div>
     </div>
     <!-- Optional JavaScript -->
@@ -29,16 +30,14 @@
 </html>
 <script>
   // Instantiate a slider
-  var mySlider = $("input.slider").bootstrapSlider();
-  mySlider.min = 100;
-  mySlider.max = 400;
-  mySlider.step = 5;
-
-  // Call a method on the slider
-  var value = mySlider.bootstrapSlider('getValue');
+  var tempSlider = $("input.slider").bootstrapSlider({
+    formatter: function(value) {
+		    return 'Current value: ' + value;
+	     }
+  });
 
   // For non-getter methods, you can chain together commands
-	mySlider
+	tempSlider
     .setAttribute(min, 100)
     .setAttribute(max, 400)
     .setAttribute(step, 5);

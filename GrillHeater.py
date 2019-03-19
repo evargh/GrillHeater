@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-from Tkinter import *
+from flask import Flask, redirect, render_template, request, url_for
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import InputRequired, Length
 
+import threading
 import time
 import pigpio
 import spidev
@@ -12,20 +16,21 @@ from subprocess import Popen, PIPE
 import logging
 
 
-root = Tk()
-target = IntVar()
-target.set(100)
-temp = StringVar()
-temp.set('0')
-labbel = Label(root, textvariable=temp)
-labbel.pack()
-ent = Entry(root)
+# target = IntVar()
+# target.set(100)
+# temp = StringVar()
+# temp.set('0')
+# labbel = Label(root, textvariable=temp)
+# labbel.pack()
+# ent = Entry(root)
 
-ent.pack()
-submit = Button(root, text="Enter", width=15, command=lambda: setTemp(ent.get()))
-submit.pack()
-ent.insert(0,"100")
-time.sleep(10)
+# ent.pack()
+# submit = Button(root, text="Enter", width=15, command=lambda: setTemp(ent.get()))
+# submit.pack()
+# ent.insert(0,"100")
+# time.sleep(10)
+
+app = Flask(__name__)
 
 pi = pigpio.pi()
 
@@ -49,19 +54,30 @@ def setTemp(nice):
 
 sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
-timeStat = time.time()
 motorState = False
-while True:
+
+@app.route('/index.html', methods=['GET', 'POST'])
+def index():
+    # TODO: Read slider values (set this up on a home device), updating the page if necessary
+    # If the page needs to be updated, learn JS
+    if request.method == 'POST':
+        # Send these arguments to motorRunner
+        runnerMan = Treading.Thread(target=motorRunner, arg=())
+        return render_template('index.html')
+    return render_template('index.html')
+
+
+def motorRunner(target = 200, timeState = time.time()):
    myMotor.run(Adafruit_MotorHAT.FORWARD)
    c, d = pi.spi_read(sensorMeat, 2)
    e, f = pi.spi_read(sensorBot, 2)
    if c == 2 and e == 2:
       wordMeat = (d[0]<<8) | d[1]
       wordBot = (f[0]<<8) | f[1]
-      if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0: # Bits 15, 2, and 1 should be zero.
+      if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0:
          t = 9*(wordMeat >> 3)/20.0 + 32.0
          u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = t - target.get()
+         delta = t - target
          if(abs(time.time() - timeStat - 10) < 1):
              timeStat = time.time()
              if delta < -20:
@@ -86,7 +102,8 @@ while True:
          print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
       else:
          print("bad reading {:b}".format(word))
-   time.sleep(1) # Don't try to read more often than 4 times a second.
+   time.sleep(1)
+   # Don't read more often than 4 times a second
 
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
