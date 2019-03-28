@@ -55,6 +55,10 @@ body{
     background-image: linear-gradient(to bottom, #5b4129, #5b4129);
     border-color: #000000 #000000 #000000;
 }
+.soft-sides { 
+  margin-left:20px;
+  margin-right:20px;
+}
 .btn.btn-darkbrown:hover {
     color: #ffffff;
     background-color: #3a2819;
