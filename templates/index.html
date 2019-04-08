@@ -19,14 +19,20 @@
     </div>
     <div class=row>
       <div class="col-sm"></div>
-      <div class=col-md soft-sides>
+      <div class="col-md" soft-sides>
         <h1>Temperature</h1>
         <input id="tempSlider" type="text" data-slider-min="150" data-slider-max="350" data-slider-step="5"/>
         <span>Current Temperature: <span id="tempSliderVal">150</span></span>
       </div>
-      <div class=col-md></div>
+      <div class="col-md" soft-sides>
+        <button type="button" class="btn btn-primary" id="cooker">Start Cooking</button>
+      </div>
+      <div class="col-sm"></div>
+    </div>
+      <div class="col-sm"></div>
+      <div class="col-md"></div>
         <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-      <div class=col-sm></div>
+      <div class="col-sm"></div>
     </div>
 
     <!-- All necessary JS libraries -->
@@ -50,19 +56,39 @@ $("#tempSlider").on("slide", function(temper) {
     $("#tempSliderVal").text(temper.value);
   }
 )
-window.onload = function() {
-
-  var dataPoints = [];
+$("#cooker").on("click", function() {
+  var dataPointsTarget = [];
+  var dataPointsMeat = [];
+  var dataPointsGrill = [];
 
   var options = {
   	theme: "light2",
   	title: {
-  		text: "Live Data"
+  		text: "Temperature vs Time"
   	},
+    axisX: {
+      title: "Time",
+      includeZero: false
+    },
+    axisY: {
+      title: "Temperature (Fahrenheit)",
+      includeZero: false
+    },
   	data: [{
   		type: "line",
-  		dataPoints: dataPoints
-  	}]
+      name: "Target Temperature",
+  		dataPoints: dataPointsTarget
+  	},
+    {
+      type: "spline",
+      name: "Meat Temperature",
+      dataPoints: dataPointsMeat
+    },
+    {
+      type: "spline",
+      name: "Grill Temperature",
+      dataPoints: dataPointsGrill
+    }]
   };
   updateData();
 
@@ -74,21 +100,25 @@ window.onload = function() {
   function updateData(data) {
   	if(newDataCount != 1) {
   		$.each(data, function(key, value) {
-  			dataPoints.push({x: xValue, y: temper});
-  			xValue++;
-  			yValue = parseInt(value[1]);
+  			dataPointsTarget.push({x: xValue, y: temper});
+        //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
+        //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
+  			xValue=xValue+3;
   		});
   	} else {
-  		//dataPoints.shift();
-  		dataPoints.push({x: xValue, y: temper});
-  		xValue++;
-  		yValue = temper;
+      dataPointsTarget.push({x: xValue, y: temper});
+      //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
+      //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
+  		xValue=xValue+3;
   	}
 
   	newDataCount = 1;
   	$("#chartContainer").CanvasJSChart(options);
-  	setTimeout(updateData, 1500);
+    if(xValue > 90) {
+      dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
+    }
+  	setTimeout(updateData, 3000);
   }
 
-}
+});
 </script>
