@@ -56,7 +56,7 @@ sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 motorState = False
 
-@app.route('/index.html', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     # TODO: Read slider values (set this up on a home device), updating the page if necessary
     # If the page needs to be updated, learn JS
@@ -65,6 +65,9 @@ def index():
         runnerMan = Treading.Thread(target=motorRunner, arg=())
         return render_template('index.html')
     return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run()
 
 
 def motorRunner(target = 200, timeState = time.time()):
