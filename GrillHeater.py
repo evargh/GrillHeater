@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, jsonify
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
