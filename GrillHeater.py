@@ -56,10 +56,12 @@ sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 motorState = False
 
+# TODO:  make two arrays, one for meat temperature and the other for the smoker
+# temperature with a limit of 30 indices and store it to JSON. The index page
+# will then be able to read both of them in
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # TODO: Read slider values (set this up on a home device), updating the page if necessary
-    # If the page needs to be updated, learn JS
     if request.method == 'POST':
         # Send these arguments to motorRunner
         runnerMan = Treading.Thread(target=motorRunner, arg=())
@@ -69,6 +71,7 @@ def index():
 if __name__ == '__main__':
     app.run()
 
+# TODO: Improve multithreading here. Be completely certain that this part of it actually works
 
 def motorRunner(target = 200, timeState = time.time()):
    myMotor.run(Adafruit_MotorHAT.FORWARD)
