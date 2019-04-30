@@ -56,6 +56,13 @@ sensorMeat = pi.spi_open(0, 1000000, 0) # CE0 on main SPI
 sensorBot = pi.spi_open(1, 1000000, 0) # CE1 on main SPI
 motorState = False
 
+meatTemps = {
+    0: 150
+}
+smokeTemps = {
+    0: 150
+}
+
 # TODO:  make two arrays, one for meat temperature and the other for the smoker
 # temperature with a limit of 30 indices and store it to JSON. The index page
 # will then be able to read both of them in
@@ -74,41 +81,50 @@ if __name__ == '__main__':
 # TODO: Improve multithreading here. Be completely certain that this part of it actually works
 
 def motorRunner(target = 200, timeState = time.time()):
-   myMotor.run(Adafruit_MotorHAT.FORWARD)
-   c, d = pi.spi_read(sensorMeat, 2)
-   e, f = pi.spi_read(sensorBot, 2)
-   if c == 2 and e == 2:
-      wordMeat = (d[0]<<8) | d[1]
-      wordBot = (f[0]<<8) | f[1]
-      if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0:
-         t = 9*(wordMeat >> 3)/20.0 + 32.0
-         u = 9*(wordBot >> 3)/20.0 + 32.0
-         delta = t - target
-         if(abs(time.time() - timeStat - 10) < 1):
-             timeStat = time.time()
-             if delta < -20:
-                 print('Delta is smaller than -20')
-                 if motorState == False:
-                     motorState = True
-                     myMotor.setSpeed(100)
-                 else:
-                     motorState = False
-                     myMotor.setSpeed(0)
-             elif delta < 0:
-                 print('Delta is smaller than 0 but not -20')
-                 if motorState == False:
-                     motorState = True
-                     myMotor.setSpeed(60)
-                 else:
-                     motorState = False
-                     myMotor.setSpeed(0)
-         temp.set("{:.2f}".format(t))
-         root.update_idletasks()
-         root.update()
-         print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
-      else:
-         print("bad reading {:b}".format(word))
-   time.sleep(1)
+    int index = 3
+    myMotor.run(Adafruit_MotorHAT.FORWARD)
+    c, d = pi.spi_read(sensorMeat, 2)
+    e, f = pi.spi_read(sensorBot, 2)
+    if c == 2 and e == 2:
+        wordMeat = (d[0]<<8) | d[1]
+        wordBot = (f[0]<<8) | f[1]
+        if (wordMeat & 0x8006) == 0 and (wordBot & 0x8006) == 0:
+            t = 9*(wordMeat >> 3)/20.0 + 32.0
+            nu = 9*(wordBot >> 3)/20.0 + 32.0
+            meatTemps.update([index, t])
+            smokeTemps.update([index, nu])
+            delta = t - target
+            if(abs(time.time() - timeStat - 10) < 1):
+                timeStat = time.time()
+                if delta < -20:
+                    print('Delta is smaller than -20')
+                    if motorState == False:
+                        motorState = True
+                        myMotor.setSpeed(100)
+                    else:
+                        motorState = False
+                        myMotor.setSpeed(0)
+                elif delta < 0:
+                    print('Delta is smaller than 0 but not -20')
+                    if motorState == False:
+                        motorState = True
+                        myMotor.setSpeed(60)
+                    else:
+                        motorState = False
+                        myMotor.setSpeed(0)
+             temp.set("{:.2f}".format(t))
+             root.update_idletasks()
+             root.update()
+             print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
+         else:
+             print("bad reading {:b}".format(word))
+     if len(meatTemps) > 30:
+         del meatTemps[i-90]
+         del smokeTemps[i-90]
+     time.sleep(1)
+     index += 3
+     json.dump(meatTemps, "meatTemp.txt")
+     json.dump(smokeTemps, "smokeTemp.txt")
    # Don't read more often than 4 times a second
 
 pi.spi_close(sensorMeat)
