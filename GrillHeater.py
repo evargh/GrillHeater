@@ -118,15 +118,14 @@ def motorRunner(target = 200, timeState = time.time()):
              print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
          else:
              print("bad reading {:b}".format(word))
-     if len(meatTemps) > 30:
-         del meatTemps[i-90]
-         del smokeTemps[i-90]
      time.sleep(1)
      index += 3
      json.dump(meatTemps, "meatTemp.txt")
      json.dump(smokeTemps, "smokeTemp.txt")
    # Don't read more often than 4 times a second
 
+open('meatTemp.txt', 'w').close()
+open('smokeTemp.txt', 'w').close()
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
 

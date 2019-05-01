@@ -103,6 +103,20 @@ $("#cooker").on("click", function() {
 
   function updateData(data) {
   	if(newDataCount != 1) {
+      $.getJSON("meatTemp.txt", function(daga) {
+        $.each(daga, function(key, value){
+          if(key == xValue) {
+            dataPointsMeat.push({x: xValue, y: parseInt(value)});
+          }
+        });
+      });
+      $.getJSON("smokeTemp.txt", function(daga) {
+        $.each(daga, function(key, value){
+          if(key == xValue) {
+            dataPointsGrill.push({x: xValue, y: parseInt(value)});
+          }
+        });
+      });
   		$.each(data, function(key, value) {
   			dataPointsTarget.push({x: xValue, y: temper});
         //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
