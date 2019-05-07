@@ -44,9 +44,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js"></script>
     <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-
   </body>
 </html>
+
 <script>
 temper = 0;
 $("#tempSlider").slider({
@@ -60,11 +60,12 @@ $("#tempSlider").on("slide", function(temper) {
   }
 )
 $("#cooker").on("click", function() {
-    // Pull in JSON values frin wgatever I'm really writing to the file
+  // Pull in JSON values from whatever I'm really writing to the file
   var dataPointsTarget = [];
   var dataPointsMeat = [];
   var dataPointsGrill = [];
 
+  // Initializing the graph
   var options = {
   	theme: "light2",
   	title: {
@@ -101,6 +102,7 @@ $("#cooker").on("click", function() {
   var yValue = temper;
   var newDataCount = 6;
 
+  // First two methods involve a longwinded way of parsing JSON in JQuery
   function updateData(data) {
   	if(newDataCount != 1) {
       $.getJSON("meatTemp.txt", function(daga) {
@@ -135,6 +137,8 @@ $("#cooker").on("click", function() {
     if(xValue > 90) {
       dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
     }
+    // For testing purposes the delay is 3 seconds. In practice, this would be
+    // more like 15
   	setTimeout(updateData, 3000);
   }
 
