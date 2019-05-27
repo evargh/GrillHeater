@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-from flask import Flask, redirect, render_template, request, url_for, jsonify
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import InputRequired, Length
 
 import threading
 import time
@@ -29,8 +25,6 @@ import logging
 # submit.pack()
 # ent.insert(0,"100")
 # time.sleep(10)
-
-app = Flask(__name__)
 
 # Initializes piGPIO, which lets me use the Raspi's GPIO pins more freely
 pi = pigpio.pi()
@@ -62,17 +56,8 @@ smokeTemps = {
     0: 0
 }
 
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    app.run()
-
 # TODO: Improve multithreading here. Be completely certain that this part of it actually works
-
-@app.route('/background_process_test')
-def background_process_test(target = 200, timeState = time.time()):
+def MotorRunner(target = 200, timeState = time.time()):
     index = 3
     myMotor.run(Adafruit_MotorHAT.FORWARD)
     # Reading thermocouple values
