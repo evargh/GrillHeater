@@ -24,11 +24,11 @@ def make_celery(app):
     return celery
 
 app = Flask(__name__)
-flask_app.config.update(
+app.config.update(
     CELERY_BROKER_URL='redis://localhost:6379',
     CELERY_RESULT_BACKEND='redis://localhost:6379'
 )
-celery = make_celery(flask_app)
+celery = make_celery(app)
 
 @celery.task()
 def getGraphed():
@@ -36,6 +36,7 @@ def getGraphed():
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    task = getGraphed.delay()
     return render_template('index.html')
 
 if __name__ == '__main__':

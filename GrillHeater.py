@@ -10,6 +10,11 @@ import atexit
 import threading
 from subprocess import Popen, PIPE
 import logging
+import os
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+meats = os.path.join(HERE, 'meatTemp.txt')
+smokes = os.path.join(HERE, 'smokeTemp.txt')
 
 
 # target = IntVar()
@@ -108,15 +113,15 @@ def MotorRunner(target = 200, timeState = time.time()):
     index += 3
     # Dumps the values to a text file, which can later be interpreted by
     # JS on the index page
-    with open('/static/resources/meatTemp.txt', 'w') as site:
+    with open(meats, 'w') as site:
         json.dump(meatTemps, site)
-    with open('/static/resources/smokeTemp.txt', 'w') as site:
+    with open(smokes, 'w') as site:
         json.dump(smokeTemps, site)
     # Don't read more than 4 times a second
 
 # Closes all sensors and files. Best practices
-open('/static/resources/meatTemp.txt', 'w').close()
-open('/static/resources/smokeTemp.txt', 'w').close()
+open(meats, 'w').close()
+open(smokes, 'w').close()
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
 
