@@ -1,5 +1,5 @@
 from flask import Flask
-from tasks import make_celery
+from tasks import make_celery, MotorRunner
 
 app = Flask(__name__)
 app.config.update(
@@ -9,15 +9,16 @@ app.config.update(
 celery = make_celery(app)
 
 
-@app.route('/process/<name>')
-def process(name):
-    reverse.delay(name)
-    return "request sent"
+@app.route('/')
+def index():
+    runner.delay()
+    return 'cool stuff'
 
 
-@celery.task(name='main.reverse')
-def reverse(string):
-    return string[::-1]
+@celery.task(name='main.runner')
+def runner():
+    MotorRunner()
+    return
 
 
 if __name__ == '__main__':

@@ -7,7 +7,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css')}}">
 
     <title>Smoke Temp</title>
   </head>
@@ -36,9 +35,6 @@
     </div>
 
     <!-- All necessary JS libraries -->
-    <script type=text/javascript>
-      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
     <script src="http://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
@@ -46,102 +42,3 @@
     <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
   </body>
 </html>
-
-<script>
-temper = 0;
-$("#tempSlider").slider({
-  formatter: function(value) {
-      temper = value;
-	    return 'Current value: ' + value;
-     }
-});
-$("#tempSlider").on("slide", function(temper) {
-    $("#tempSliderVal").text(temper.value);
-  }
-)
-$("#cooker").on("click", function() {
-	$.getJSON('/index', function(data){});
-  // Pull in JSON values from whatever I'm really writing to the file
-  var dataPointsTarget = [];
-  var dataPointsMeat = [];
-  var dataPointsGrill = [];
-
-  // Initializing the graph
-  var options = {
-  	theme: "light2",
-  	title: {
-  		text: "Temperature vs Time"
-  	},
-    axisX: {
-      title: "Time",
-      includeZero: false
-    },
-    axisY: {
-      title: "Temperature (Fahrenheit)",
-      includeZero: false
-    },
-  	data: [{
-  		type: "line",
-      name: "Target Temperature",
-  		dataPoints: dataPointsTarget
-  	},
-    {
-      type: "spline",
-      name: "Meat Temperature",
-      dataPoints: dataPointsMeat
-    },
-    {
-      type: "spline",
-      name: "Grill Temperature",
-      dataPoints: dataPointsGrill
-    }]
-  };
-  updateData();
-
-  // Initial Values
-  var xValue = 0;
-  var yValue = temper;
-  var newDataCount = 6;
-
-  // First two methods involve a longwinded way of parsing JSON in JQuery
-  function updateData(data) {
-  	if(newDataCount != 1) {
-	    $.getJSON("{{ url_for('static',filename='resources/meatTemp.txt')}}", function(daga) {
-	      $.each(daga, function(key, value){
-	        if(key == xValue) {
-            dataPointsMeat.push({x: xValue, y: parseInt(value)});
-          }
-        });
-      });
-      $.getJSON("{{ url_for('static',filename='resources/smokeTemp.txt')}}", function(daga) {
-        $.each(daga, function(key, value){
-          if(key == xValue) {
-            dataPointsGrill.push({x: xValue, y: parseInt(value)});
-          }
-        });
-      });
-  		$.each(data, function(key, value) {
-  			dataPointsTarget.push({x: xValue, y: temper});
-        //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
-        //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
-  			xValue=xValue+3;
-  		});
-  	} else {
-      dataPointsTarget.push({x: xValue, y: temper});
-      //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
-      //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
-  		xValue=xValue+3;
-  	}
-
-  	newDataCount = 1;
-  	$("#chartContainer").CanvasJSChart(options);
-    if(xValue > 90) {
-      dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
-    }
-    // For testing purposes the delay is 3 seconds. In practice, this would be
-    // more like 15
-  	setTimeout(updateData, 3000);
-  }
-
-});
-</script>
