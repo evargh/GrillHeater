@@ -1,32 +1,23 @@
-from flask import Flask, redirect, render_template, request, url_for, jsonify
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import InputRequired, Length
-
-from tasks import MotorRunner, make_celery
-from celery import Celery, current_task
-from celery.result import AsyncResult
+from flask import Flask
+from tasks import make_celery
 
 app = Flask(__name__)
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
-
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379',
+    CELERY_RESULT_BACKEND='redis://localhost:6379'
+)
 celery = make_celery(app)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def mainview():
-    return render_template('index.html')
-
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    runner.delay()
-    return render_template('index.html')
+@app.route('/process/<name>')
+def process(name):
+    reverse.delay(name)
+    return "request sent"
 
 
-@celery.task(name='tasks.MotorRunner')
-def runner():
-    MotorRunner()
+@celery.task(name='main.reverse')
+def reverse(string):
+    return string[::-1]
 
 
 if __name__ == '__main__':
