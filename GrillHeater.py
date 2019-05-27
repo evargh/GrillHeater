@@ -64,10 +64,6 @@ smokeTemps = {
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        # Send these arguments to motorRunner
-        runnerMan = Treading.Thread(target=motorRunner, arg=())
-        return render_template('index.html')
     return render_template('index.html')
 
 if __name__ == '__main__':
@@ -75,8 +71,9 @@ if __name__ == '__main__':
 
 # TODO: Improve multithreading here. Be completely certain that this part of it actually works
 
-def motorRunner(target = 200, timeState = time.time()):
-    int index = 3
+@app.route('/background_process_test')
+def background_process_test(target = 200, timeState = time.time()):
+    index = 3
     myMotor.run(Adafruit_MotorHAT.FORWARD)
     # Reading thermocouple values
     c, d = pi.spi_read(sensorMeat, 2)
@@ -117,22 +114,24 @@ def motorRunner(target = 200, timeState = time.time()):
                     else:
                         motorState = False
                         myMotor.setSpeed(0)
-             temp.set("{:.2f}".format(t))
-             # Prints values to conole for testing
-             print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
-         else:
-             print("bad reading {:b}".format(word))
-     time.sleep(1)
-     index += 3
-     # Dumps the values to a text file, which can later be interpreted by
-     # JS on the index page
-     json.dump(meatTemps, "meatTemp.txt")
-     json.dump(smokeTemps, "smokeTemp.txt")
-   # Don't read more than 4 times a second
+            temp.set("{:.2f}".format(t))
+            # Prints values to conole for testing
+            print("{:.2f}".format(t) + ' ' + "{:.2f}".format(u) + ' ' + "{:.2f}".format(delta) + ' ' + str(motorState))
+        else:
+            print("bad reading {:b}".format(word))
+    time.sleep(1)
+    index += 3
+    # Dumps the values to a text file, which can later be interpreted by
+    # JS on the index page
+    with open('/static/resources/meatTemp.txt', 'w') as site:
+        json.dump(meatTemps, site)
+    with open('/static/resources/smokeTemp.txt', 'w') as site:
+        json.dump(smokeTemps, site)
+    # Don't read more than 4 times a second
 
 # Closes all sensors and files. Best practices
-open('meatTemp.txt', 'w').close()
-open('smokeTemp.txt', 'w').close()
+open('/static/resources/meatTemp.txt', 'w').close()
+open('/static/resources/smokeTemp.txt', 'w').close()
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
 
