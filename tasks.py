@@ -83,8 +83,6 @@ smokeTemps = {
     0: 0
 }
 
-
-@celery.task
 def MotorRunner(target=200, timeState=time.time()):
     timeStat = time.time()
     # Runs the motor
