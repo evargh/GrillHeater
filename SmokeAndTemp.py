@@ -99,6 +99,27 @@ def setEnd(nice):
 timeStat = time.time()
 motorState = False
 
+# Lookup table for delta values
+def timesetter(dlt):
+    if dlt > 50:
+        setRun(30)
+        setEnd(30)
+    elif dlt > 25:
+        setRun(25)
+        setEnd(60)
+    elif dlt > 6:
+        setRun(15)
+        setEnd(60)
+    elif dlt > 3:
+        setRun(10)
+        setEnd(60)
+    elif dlt < -5:
+        setRun(3)
+        setEnd(120)
+    else:
+        setRun(3)
+        setEnd(60)
+
 while True:
     # Read sensor values
     c, d = pi.spi_read(sensorMeat, 2)
@@ -141,27 +162,6 @@ while True:
             print("bad reading {:b}".format(wordMeat) + ' ' + "bad reading {:b}".format(wordBot))
 
     time.sleep(1)
-
-# Lookup table for delta values
-def timesetter(dlt):
-    if dlt > 50:
-        setRun(30)
-        setEnd(30)
-    elif dlt > 25:
-        setRun(25)
-        setEnd(60)
-    elif dlt > 6:
-        setRun(15)
-        setEnd(60)
-    elif dlt > 3:
-        setRun(10)
-        setEnd(60)
-    elif dlt < -5:
-        setRun(3)
-        setEnd(120)
-    else:
-        setRun(3)
-        setEnd(60)
 
 pi.spi_close(sensorMeat)
 pi.spi_close(sensorBot)
