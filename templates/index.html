@@ -80,7 +80,7 @@ $("#submit").click(function(event) {
       },
       axisX: {
         title: "Time",
-        includeZero: true
+        includeZero: false
       },
       axisY: {
         title: "Temperature (Fahrenheit)",
@@ -108,33 +108,32 @@ $("#submit").click(function(event) {
     var xValue = 0;
     var yValue = temper;
     // First two methods involve a longwinded way of parsing JSON in JQuery
-    function updateData(data) {
-  	   $.getJSON("{{ url_for('static',filename='resources/meatTemp.json')}}", function(daga) {
-  	      $.each(daga, function(key, value){
+    function updateData() {
+  	   $.getJSON("{{ url_for('static',filename='resources/meatTemp.json')}}", function(data) {
+  	      $.each(data, function(key, value){
   	         if(key == xValue) {
-               dataPointsMeat.push({x: xValue, y: parseInt(value)});
+               dataPointsMeat.push({x: xValue, y: Math.round(value)});
              }
           });
       });
-      $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json')}}", function(daga) {
-        $.each(daga, function(key, value){
+      $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json')}}", function(data) {
+        $.each(data, function(key, value){
           if(key == xValue) {
-            dataPointsGrill.push({x: xValue, y: parseInt(value)});
+            dataPointsGrill.push({x: xValue, y: Math.round(value)});
           }
         });
       });
-    	 $.each(data, function(key, value) {
-    	    dataPointsTarget.push({x: xValue, y: temper});
-    	 });
 
-      x=x+3;
+      dataPointsTarget.push({x: xValue, y: temper});
+
+      xValue=xValue+3;
       if(xValue > 90) {
         dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
       }
       	// For testing purposes the delay is 3 seconds. In practice, this would be
       	// more like 15
       $("#chartContainer").CanvasJSChart().render()
-    	setTimeout(updateData, 1000);
+    	setTimeout(updateData, 3000);
     }
 });
 </script>
