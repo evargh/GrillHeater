@@ -53,6 +53,14 @@ $("#tempSlider").slider({
   formatter: function(value) {
       temper = value;
 	    return 'Current value: ' + value;
+      $.ajax({
+          type: "POST",
+          contentType: "application/json;charset=utf-8",
+          url: "/",
+          traditional: "true",
+          data: JSON.stringify(temper),
+          dataType: "json"
+        });
      }
 });
 $("#tempSlider").on("slide", function(temper) {
