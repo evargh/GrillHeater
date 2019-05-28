@@ -15,13 +15,14 @@ celery = make_celery(app)
 def index():
     if request.method == 'POST':
         targeto = request.get_json()
-        runner.delay(int(float(targeto)), time.time())
-    return render_template('index.html')
-
+        runner.delay(targeto, time.time())
+        return render_template('index.html',target=targeto)
+    else:
+        return render_template('index.html',target=150)
 
 @celery.task(name='main.runner')
 def runner(targ, time):
-    MotorRunner(targ, time)
+    return targ
 
 
 if __name__ == '__main__':

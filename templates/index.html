@@ -22,11 +22,11 @@
       <div class="col-md" soft-sides>
         <h1>Temperature</h1>
         <input id="tempSlider" type="text" data-slider-min="150" data-slider-max="350" data-slider-step="5"/>
-        <span>Current Temperature: <span id="tempSliderVal">150</span></span>
+        <span>Current Temperature: <span id="tempSliderVal">{{target}}</span></span>
       </div>
       <div class="col-md" soft-sides>
-        <form action="/" method="post">
-          <button method="post" type="button" class="btn btn-primary" id="cooker">Start Cooking</button>
+        <form action="/" method=POST>
+          <input type="submit">
         </form>
       </div>
       <div class="col-sm"></div>
@@ -50,23 +50,25 @@
 </html>
 
 <script>
-temper = 0;
+temper = 150;
 $("#tempSlider").slider({
   formatter: function(value) {
       temper = value;
-	    return 'Current value: ' + value;
-      $.ajax({
-          type: "POST",
-          contentType: "application/json;charset=utf-8",
-          url: "/",
-          traditional: "true",
-          data: JSON.stringify(temper),
-          dataType: "json"
-        });
+      return 'Current value: ' + value;
      }
 });
 $("#tempSlider").on("slide", function(temper) {
     $("#tempSliderVal").text(temper.value);
   }
-)
+);
+$("#submit").on("click",function(temper) {
+	$.ajax({
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
+      url: "/",
+      traditional: "true",
+      data: JSON.stringify(temper),
+      dataType: "json"
+    });
+});
 </script>
