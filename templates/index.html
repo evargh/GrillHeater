@@ -61,8 +61,8 @@ $("#tempSlider").on("slide", function(temper) {
   }
 );
 $("#submit").click(function(event) {
-  event.preventDefault();
-	$.ajax({
+    event.preventDefault();
+	  $.ajax({
       type: "POST",
       contentType: "application/json;charset=utf-8",
       url: "/",
@@ -106,35 +106,32 @@ $("#submit").click(function(event) {
     // Initial Values
     var xValue = 0;
     var yValue = temper;
-    var newDataCount = 6;
     // First two methods involve a longwinded way of parsing JSON in JQuery
     function updateData(data) {
-    	if(newDataCount != 1) {
-  	    $.getJSON("{{ url_for('static',filename='resources/meatTemp.json')}}", function(daga) {
+  	   $.getJSON("{{ url_for('static',filename='resources/meatTemp.json')}}", function(daga) {
   	      $.each(daga, function(key, value){
-  	        if(key == xValue) {
-              dataPointsMeat.push({x: xValue, y: parseInt(value)});
-            }
+  	         if(key == xValue) {
+               dataPointsMeat.push({x: xValue, y: parseInt(value)});
+             }
           });
+      });
+      $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json')}}", function(daga) {
+        $.each(daga, function(key, value){
+          if(key == xValue) {
+            dataPointsGrill.push({x: xValue, y: parseInt(value)});
+          }
         });
-        $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json')}}", function(daga) {
-          $.each(daga, function(key, value){
-            if(key == xValue) {
-              dataPointsGrill.push({x: xValue, y: parseInt(value)});
-            }
-          });
-        });
-    	$.each(data, function(key, value) {
-    		dataPointsTarget.push({x: xValue, y: temper});
-    	});
+      });
+    	 $.each(data, function(key, value) {
+    	    dataPointsTarget.push({x: xValue, y: temper});
+    	 });
     	$("#chartContainer").CanvasJSChart(options);
-      	if(xValue > 90) {
-        	dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
-      	}
+      if(xValue > 90) {
+        dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
+      }
       	// For testing purposes the delay is 3 seconds. In practice, this would be
       	// more like 15
     	setTimeout(updateData, 3000);
     }
-
-};
+});
 </script>
