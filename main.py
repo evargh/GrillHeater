@@ -21,7 +21,7 @@ def index():
 
 @celery.task(name='main.runner')
 def runner(targ, time):
-    return targ
+    return MotorRunner(targ, time)
 
 
 if __name__ == '__main__':

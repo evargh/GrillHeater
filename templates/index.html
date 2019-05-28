@@ -25,7 +25,7 @@
         <span>Current Temperature: <span id="tempSliderVal">{{target}}</span></span>
       </div>
       <div class="col-md" soft-sides>
-          <input type="submit" id="submit">
+        <input type="submit" id="submit">
       </div>
       <div class="col-sm"></div>
     </div>
@@ -61,7 +61,7 @@ $("#tempSlider").on("slide", function(temper) {
   }
 );
 $("#submit").click(function(event) {
-event.preventDefault();
+  event.preventDefault();
 	$.ajax({
       type: "POST",
       contentType: "application/json;charset=utf-8",
@@ -70,5 +70,81 @@ event.preventDefault();
       data: JSON.stringify(temper),
       dataType: "json"
     });
+    var dataPointsTarget = [];
+    var dataPointsMeat = [];
+    var dataPointsGrill = [];
+    var options = {
+      theme: "light2",
+    	title: {
+        text: "Temperature vs Time"
+      },
+      axisX: {
+        title: "Time",
+        includeZero: false
+      },
+      axisY: {
+        title: "Temperature (Fahrenheit)",
+        includeZero: false
+      },
+    	data: [{
+    		type: "line",
+        name: "Target Temperature",
+    		dataPoints: dataPointsTarget
+    	},
+      {
+        type: "spline",
+        name: "Meat Temperature",
+        dataPoints: dataPointsMeat
+      },
+      {
+        type: "spline",
+        name: "Grill Temperature",
+        dataPoints: dataPointsGrill
+      }]
+    };
+    updateData();
+    // Initial Values
+    var xValue = 0;
+    var yValue = temper;
+    var newDataCount = 6;
+    // First two methods involve a longwinded way of parsing JSON in JQuery
+    function updateData(data) {
+    	if(newDataCount != 1) {
+  	    $.getJSON("{{ url_for('static',filename='resources/meatTemp.json')}}", function(daga) {
+  	      $.each(daga, function(key, value){
+  	        if(key == xValue) {
+              dataPointsMeat.push({x: xValue, y: parseInt(value)});
+            }
+          });
+        });
+        $.getJSON("{{ url_for('static',filename='/smokeTemp.json')}}", function(daga) {
+          $.each(daga, function(key, value){
+            if(key == xValue) {
+              dataPointsGrill.push({x: xValue, y: parseInt(value)});
+            }
+          });
+        });
+    		$.each(data, function(key, value) {
+    			dataPointsTarget.push({x: xValue, y: temper});
+          //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
+          //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
+    			xValue=xValue+3;
+    		});
+    	} else {
+        dataPointsTarget.push({x: xValue, y: temper});
+        //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
+        //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
+    		xValue=xValue+3;
+    	}
+    	newDataCount = 1;
+    	$("#chartContainer").CanvasJSChart(options);
+      if(xValue > 90) {
+        dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
+      }
+      // For testing purposes the delay is 3 seconds. In practice, this would be
+      // more like 15
+    	setTimeout(updateData, 3000);
+    }
+
 });
 </script>

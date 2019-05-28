@@ -38,6 +38,9 @@ smokeTemps = {
     0: 0
 }
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+meats = os.path.join(HERE, '/static/resources/meatTemp.json')
+smokes = os.path.join(HERE, '/static/resources/smokeTemp.json')
 
 def make_celery(app):
     celery = Celery(
@@ -101,6 +104,10 @@ def MotorRunner(target=200, timeStat=time.time()):
                 print("bad reading {:b}".format(word))
         time.sleep(1)
         index += 3
+        with open(meats, 'w') as site:
+            json.dump(meatTemps, site)
+        with open(smokes, 'w') as site:
+            json.dump(smokeTemps, site)
         return "we got there"
         # Dumps the values to a text file, which can later be interpreted by
         # JS on the index page
