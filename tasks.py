@@ -101,7 +101,7 @@ def MotorRunner(target=200, timeStat=time.time()):
                 print("bad reading {:b}".format(word))
         time.sleep(1)
         index += 3
-        return target
+        return "we got there"
         # Dumps the values to a text file, which can later be interpreted by
         # JS on the index page
         # Don't read more than 4 times a second

@@ -11,14 +11,12 @@ app.config.update(
 celery = make_celery(app)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         targeto = request.get_json()
         runner.delay(int(float(targeto)), time.time())
-        return render_template('index.html')
-    else:
-        return render_template('index.html')
+    return render_template('index.html')
 
 
 @celery.task(name='main.runner')
