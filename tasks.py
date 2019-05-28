@@ -59,7 +59,6 @@ def MotorRunner(target=200, timeStat=time.time()):
         timeStat = time.time()
         # Runs the motor
         index = 3
-        myMotor.run(Adafruit_MotorHAT.FORWARD)
         # Reading thermocouple values
         c, d = pi.spi_read(sensorMeat, 2)
         e, f = pi.spi_read(sensorBot, 2)

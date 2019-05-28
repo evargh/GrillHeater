@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from tasks import make_celery, MotorRunner
 
 app = Flask(__name__)
@@ -12,13 +12,12 @@ celery = make_celery(app)
 @app.route('/')
 def index():
     runner.delay()
-    return 'cool stuff'
+    return render_template('index.html')
 
 
 @celery.task(name='main.runner')
 def runner():
     MotorRunner()
-    return
 
 
 if __name__ == '__main__':
