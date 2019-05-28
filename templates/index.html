@@ -117,34 +117,24 @@ $("#submit").click(function(event) {
             }
           });
         });
-        $.getJSON("{{ url_for('static',filename='/smokeTemp.json')}}", function(daga) {
+        $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json')}}", function(daga) {
           $.each(daga, function(key, value){
             if(key == xValue) {
               dataPointsGrill.push({x: xValue, y: parseInt(value)});
             }
           });
         });
-    		$.each(data, function(key, value) {
-    			dataPointsTarget.push({x: xValue, y: temper});
-          //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
-          //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
-    			xValue=xValue+3;
-    		});
-    	} else {
-        dataPointsTarget.push({x: xValue, y: temper});
-        //dataPointsMeat.push({x: xValue, y: extract thermocouple value})
-        //dataPointsGrill.push({x: xValue, y: extract thermocouple value})
-    		xValue=xValue+3;
-    	}
-    	newDataCount = 1;
+    	$.each(data, function(key, value) {
+    		dataPointsTarget.push({x: xValue, y: temper});
+    	});
     	$("#chartContainer").CanvasJSChart(options);
-      if(xValue > 90) {
-        dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
-      }
-      // For testing purposes the delay is 3 seconds. In practice, this would be
-      // more like 15
+      	if(xValue > 90) {
+        	dataPointsTarget.shift(); dataPointsMeat.shift(); dataPointsGrill.shift();
+      	}
+      	// For testing purposes the delay is 3 seconds. In practice, this would be
+      	// more like 15
     	setTimeout(updateData, 3000);
     }
 
-});
+};
 </script>

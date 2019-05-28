@@ -38,9 +38,8 @@ smokeTemps = {
     0: 0
 }
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-meats = os.path.join(HERE, '/static/resources/meatTemp.json')
-smokes = os.path.join(HERE, '/static/resources/smokeTemp.json')
+meats = os.path.abspath('static/resources/meatTemp.json')
+smokes = os.path.abspath('static/resources/smokeTemp.json')
 
 def make_celery(app):
     celery = Celery(
@@ -59,10 +58,10 @@ def make_celery(app):
 
 
 def MotorRunner(target=200, timeStat=time.time()):
+    index = 3
     while True:
         timeStat = time.time()
         # Runs the motor
-        index = 3
         # Reading thermocouple values
         c, d = pi.spi_read(sensorMeat, 2)
         e, f = pi.spi_read(sensorBot, 2)
@@ -74,6 +73,8 @@ def MotorRunner(target=200, timeStat=time.time()):
                 # Converting all information to fahrenheit
                 t = 9*(wordMeat >> 3)/20.0 + 32.0
                 nu = 9*(wordBot >> 3)/20.0 + 32.0
+                meatTemps.update({index: "{:.2f}".format(t)})
+                smokeTemps.update({index: "{:.2f}".format(nu)})
                 # Adding values to the dictionaries
                 # Establishing the change in temperature that needs to be corrected
                 delta = t - target
@@ -102,13 +103,12 @@ def MotorRunner(target=200, timeStat=time.time()):
                             myMotor.setSpeed(0)
             else:
                 print("bad reading {:b}".format(word))
-        time.sleep(1)
+        time.sleep(3)
         index += 3
         with open(meats, 'w') as site:
             json.dump(meatTemps, site)
         with open(smokes, 'w') as site:
             json.dump(smokeTemps, site)
-        return "we got there"
         # Dumps the values to a text file, which can later be interpreted by
         # JS on the index page
         # Don't read more than 4 times a second
