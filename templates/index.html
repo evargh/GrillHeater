@@ -25,9 +25,7 @@
         <span>Current Temperature: <span id="tempSliderVal">{{target}}</span></span>
       </div>
       <div class="col-md" soft-sides>
-        <form method=POST>
-          <input type="submit">
-        </form>
+          <input type="submit" id="submit">
       </div>
       <div class="col-sm"></div>
     </div>
@@ -50,7 +48,8 @@
 </html>
 
 <script>
-temper = 150;
+var currentSlide;
+var temper = 150;
 $("#tempSlider").slider({
   formatter: function(value) {
       temper = value;
@@ -61,7 +60,8 @@ $("#tempSlider").on("slide", function(temper) {
     $("#tempSliderVal").text(temper.value);
   }
 );
-$("#submit").on("click",function(temper) {
+$("#submit").click(function(event) {
+event.preventDefault();
 	$.ajax({
       type: "POST",
       contentType: "application/json;charset=utf-8",
