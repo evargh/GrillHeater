@@ -109,20 +109,23 @@ $("#submit").click(function(event) {
     var yValue = temper;
     // First two methods involve a longwinded way of parsing JSON in JQuery
     function updateData() {
-console.dir("we updating data");
-  	   $.getJSON("{{ url_for('static',filename='resources/meatTemp.json') }}").done( function(data) {
-	console.dir("it worked");
+      console.dir("we updating data");
+  	   $.getJSON("{{ url_for('static',filename='resources/meatTemp.json') }}")
+       .done( function(data) {
+	        console.dir("it worked");
   	      $.each(data, function(key, value){
   	         if(key == xValue) {
-               		dataPointsMeat.push({x: xValue, y: Math.round(value)});
-             	}
-          }).fail( function(jqxhr, textStatus, error) {
-		var err = textStatus + ", " + error;
-		console.dir("Request failed: " + err);
-		});
+               dataPointsMeat.push({x: xValue, y: Math.round(value)});
+             }
+           })
+        .fail( function(jqxhr, textStatus, error) {
+        	var err = textStatus + ", " + error;
+        	console.dir("request failed " + err);
+		  });
 
       });
       $.getJSON("{{ url_for('static',filename='resources/smokeTemp.json') }}", function(data) {
+        console.dir(data);
         $.each(data, function(key, value){
           if(key == xValue) {
             dataPointsGrill.push({x: xValue, y: Math.round(value)});
